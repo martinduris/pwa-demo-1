@@ -20,6 +20,8 @@ export class TodoDbService {
     }
 
     console.debug(`Loaded ${this.todos.length} todos`);
+    // Badge notification
+    this.notificationsUiService.notificationAboutTodosCount(this.todos.length).then();
   }
 
   public async create(title: string): Promise<Todo> {
@@ -47,6 +49,9 @@ export class TodoDbService {
   private async persist(): Promise<void> {
     console.debug(`Persisting ${this.todos.length} ToDos`)
     localStorage.setItem('todos', JSON.stringify(this.todos));
+
+    // Badge notification
+    await this.notificationsUiService.notificationAboutTodosCount(this.todos.length);
   }
 
 }
