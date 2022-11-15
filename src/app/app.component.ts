@@ -9,21 +9,33 @@ declare var window: any;
 })
 export class AppComponent implements OnInit {
 
+  deferredPrompt: any;
+
   ngOnInit(): void {
     // For: Custom install notification
-    // window.addEventListener('beforeinstallprompt', (e: any) => {
-    //   // TODO: remove default app install dialog
-    // });
+    window.addEventListener('beforeinstallprompt', (e: any) => {
+      e.preventDefault();
+      console.log(`'beforeinstallprompt' event was fired.`);
+      this.deferredPrompt = e; // we use this to signal that we should display fancy loading
+    });
 
     // For: Custom install notification
-    // window.addEventListener('appinstalled', () => {
-    //  // TODO: if app is already installed, do not display dialog to install app
-    //});
+    window.addEventListener('appinstalled', () => {
+      this.deferredPrompt = null;
+      console.log('PWA was installed');
+    });
   }
 
   public async installPwa() {
     // For: Custom install notification
-    // TODO ask user install app
+    if (this.deferredPrompt) {
+      this.deferredPrompt.prompt();
+      const { outcome } = await this.deferredPrompt.userChoice;
+      console.log(`User response to the install prompt: ${outcome}`);
+      window.deferredPrompt = null;
+    } else {
+      console.error('nope, already installed')
+    }
   }
 
 }
