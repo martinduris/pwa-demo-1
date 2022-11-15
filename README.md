@@ -1,9 +1,5 @@
-TODO:
-- First slide
-- repo with tags - checkpoint
-
-
 # How to install and run
+
 - `npm i`
 - `npm run start`
 
